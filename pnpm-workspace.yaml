@@ -3,6 +3,7 @@ packages:
   - "packages/*"
 allowBuilds:
   '@parcel/watcher': true
+  esbuild: false
   unrs-resolver: true
 patchedDependencies:
   '@expo/cli': patches/@expo__cli.patch
