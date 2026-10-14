@@ -1,16 +1,13 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
-import type { HealthCheck } from '@food-delivery/types';
+import { Controller, Get, Inject } from '@nestjs/common';
+import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import schema from './db/schema';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(@Inject('DB') private db: NodePgDatabase<typeof schema>) {}
 
-  @Get('health')
-  healthCheck(): HealthCheck {
-    return {
-      status: 'ok',
-      timestamp: new Date().toISOString(),
-    };
+  @Get('db-test')
+  async dbTest() {
+    return this.db.select().from(schema.users).limit(10);
   }
 }
