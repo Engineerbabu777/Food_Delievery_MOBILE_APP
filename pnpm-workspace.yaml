@@ -3,6 +3,7 @@ packages:
   - "packages/*"
 allowBuilds:
   '@parcel/watcher': true
+  bcrypt: false
   esbuild: false
   unrs-resolver: true
 patchedDependencies:
