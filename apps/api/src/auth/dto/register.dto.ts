@@ -1,6 +1,5 @@
 import { UserRole } from '@food-delivery/types';
 import { IsEmail, IsEnum, IsString, MinLength } from 'class-validator';
-import { userRoleEnum } from '../../db/schema/user.schema';
 
 export class RegisterDto {
   @IsString()
@@ -16,6 +15,6 @@ export class RegisterDto {
   @MinLength(6)
   password!: string;
 
-  @IsEnum(userRoleEnum)
+  @IsEnum(UserRole)
   role!: UserRole;
 }
