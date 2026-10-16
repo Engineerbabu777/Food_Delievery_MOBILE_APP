@@ -5,6 +5,7 @@ allowBuilds:
   '@parcel/watcher': true
   bcrypt: false
   esbuild: false
+  msgpackr-extract: false
   unrs-resolver: true
 patchedDependencies:
   '@expo/cli': patches/@expo__cli.patch
