@@ -29,3 +29,16 @@ export interface JwtPayload {
     email: string;
     role: UserRole;
 }
+
+export interface RestaurantType{
+    id: string;
+    ownerId: string;
+    name: string;
+    description: string;
+    imageUrl:string;
+    rating:string;
+    reviewCount:number;
+    isOpen:boolean;
+    createdAt:number;
+    updatedAt:number;
+}
