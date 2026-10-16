@@ -23,5 +23,10 @@
   "type": "module",
   "devDependencies": {
     "concurrently": "^10.0.6"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@expo/cli@55.0.36": "patches/@expo__cli.patch"
+    }
   }
 }
