@@ -1,38 +1,33 @@
-import { JwtPayload } from '@food-delivery/types';
 import {
-  Injectable,
   CanActivate,
   ExecutionContext,
+  Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { IncomingMessage } from 'node:http';
-
-type AuthenticatedRequest = IncomingMessage & {
-  user: JwtPayload;
-};
+import { Request } from 'express';
+import { JwtPayload } from '@food-delivery/types';
 
 @Injectable()
-export class AuthGuard implements CanActivate {
-  constructor(private readonly jwtService: JwtService) {}
+export class JwtAuthGuard implements CanActivate {
+  constructor(private jwtService: JwtService) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+    const request = context
+      .switchToHttp()
+      .getRequest<Request & { user: JwtPayload }>();
 
-    const token = request.headers.authorization;
+    // header format: "Bearer frgsrgrg..."
+    const authHeader = request.headers.authorization;
+    if (!authHeader) throw new UnauthorizedException('No token provided');
 
-    if (!token) {
-      throw new UnauthorizedException('Auth token is required');
-    }
-
-    const tokenFormat = token.startsWith('Bearer ') ? token.slice(7) : token;
-
-    if (!tokenFormat) {
-      throw new UnauthorizedException('Invalid token format');
-    }
+    const token = authHeader.split(' ')[1];
+    if (!token) throw new UnauthorizedException('Invalid token format');
 
     try {
-      request.user = this.jwtService.verify<JwtPayload>(tokenFormat);
+      const payload = this.jwtService.verify<JwtPayload>(token);
+
+      request.user = payload;
       return true;
     } catch {
       throw new UnauthorizedException('Invalid or expired token');
