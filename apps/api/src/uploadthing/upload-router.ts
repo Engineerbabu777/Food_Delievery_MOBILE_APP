@@ -1,42 +1,40 @@
-import { JwtPayload } from '@food-delivery/types';
 import { createUploadthing, type FileRouter } from 'uploadthing/express';
-import type { Request } from 'express';
+import { Request } from 'express';
+import { JwtPayload } from '@food-delivery/types';
 
-type AuthticatedRequest = Request & { user?: JwtPayload };
+type AuthenticatedRequest = Request & { user?: JwtPayload };
 
 const f = createUploadthing();
 
 export const uploadRouter: FileRouter = {
   restaurantImage: f({
-    image: { maxFileSize: '8MB', maxFileCount: 1 },
+    image: {
+      maxFileSize: '4MB',
+      maxFileCount: 1,
+    },
   })
     .middleware(({ req }) => {
-      const { user } = req as AuthticatedRequest;
-
-      if (!user) throw new Error('Unauthorized');
-
-      return { uploadedBy: user.sub ?? 'unknown' };
+      const authReq = req as AuthenticatedRequest;
+      return { uploadedBy: authReq.user?.sub ?? 'unknown' };
     })
-    .onUploadComplete(({ metadata, file }) => {
-      console.log(metadata, file);
-      return {
-        url: file.url,
-      };
+    .onUploadComplete(({ file, metadata }) => {
+      console.log('Upload complete by:', metadata.uploadedBy);
+      console.log('File URL:', file.ufsUrl);
+      return { url: file.ufsUrl };
     }),
 
-  menuItemImage: f({ image: { maxFileSize: '4MB', maxFileCount: 1 } })
+  menuItemImage: f({
+    image: {
+      maxFileSize: '4MB',
+      maxFileCount: 1,
+    },
+  })
     .middleware(({ req }) => {
-      const { user } = req as AuthticatedRequest;
-
-      if (!user) throw new Error('Unauthorized');
-
-      return { uploadedBy: user.sub ?? 'unknown' };
+      const authReq = req as AuthenticatedRequest;
+      return { uploadedBy: authReq.user?.sub ?? 'unknown' };
     })
-    .onUploadComplete(({ metadata, file }) => {
-      console.log(metadata, file);
-      return {
-        url: file.url,
-      };
+    .onUploadComplete(({ file }) => {
+      return { url: file.ufsUrl };
     }),
 } satisfies FileRouter;
 
