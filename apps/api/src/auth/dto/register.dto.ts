@@ -1,5 +1,5 @@
-import { UserRole } from '@food-delivery/types';
 import { IsEmail, IsEnum, IsString, MinLength } from 'class-validator';
+import { UserRole } from '@food-delivery/types';
 
 export class RegisterDto {
   @IsString()
