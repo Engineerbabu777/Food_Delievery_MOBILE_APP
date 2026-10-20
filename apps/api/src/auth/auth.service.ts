@@ -1,23 +1,22 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ConflictException,
   Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
-import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import schema from '../db/schema';
 import { JwtService } from '@nestjs/jwt';
-import { RegisterDto } from './dto/register.dto';
 import { eq } from 'drizzle-orm';
-import { User } from '../db/schema/user.schema';
+import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
+import * as bcrypt from 'bcrypt';
+import * as schema from '../db/schema';
+import { JwtPayload } from '@food-delivery/types';
+import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject('DB') private db: NodePgDatabase<typeof schema>,
+    @Inject('DB') private db: NeonHttpDatabase<typeof schema>,
     private jwtService: JwtService,
   ) {}
 
@@ -27,13 +26,11 @@ export class AuthService {
       .from(schema.users)
       .where(eq(schema.users.email, dto.email));
 
-    if (existing) {
-      throw new ConflictException('Email is already registered');
-    }
+    if (existing) throw new ConflictException('Email already in use');
 
     const hashedPassword = await bcrypt.hash(dto.password, 10);
 
-    const [newUser] = await this.db
+    const [user] = await this.db
       .insert(schema.users)
       .values({
         firstName: dto.firstName,
@@ -45,8 +42,8 @@ export class AuthService {
       .returning();
 
     return {
-      user: this.sanitizeUser(newUser),
-      token: this.generateToken(newUser),
+      user: this.sanitizeUser(user),
+      token: this.generateToken(user),
     };
   }
 
@@ -56,15 +53,11 @@ export class AuthService {
       .from(schema.users)
       .where(eq(schema.users.email, dto.email));
 
-    if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
+    if (!user) throw new UnauthorizedException('Invalid Credentials');
 
-    const isPasswordValid = await bcrypt.compare(dto.password, user.password);
+    const passwordMatch = await bcrypt.compare(dto.password, user.password);
 
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
+    if (!passwordMatch) throw new UnauthorizedException('Invalid Credentials');
 
     return {
       user: this.sanitizeUser(user),
@@ -72,17 +65,18 @@ export class AuthService {
     };
   }
 
-  private sanitizeUser(user: User) {
-    const { password, ...safeUser } = user;
-    return safeUser;
-  }
-
-  private generateToken(user: User) {
-    const payload = {
-      sub: user.id,
+  private generateToken(user: schema.NewUser) {
+    const payload: JwtPayload = {
+      sub: user.id!,
       email: user.email,
-      role: user.role,
+      role: user.role!,
     };
     return this.jwtService.sign(payload);
+  }
+
+  private sanitizeUser(user: schema.User) {
+    const { password, ...safeUser } = user;
+    void password;
+    return safeUser;
   }
 }
