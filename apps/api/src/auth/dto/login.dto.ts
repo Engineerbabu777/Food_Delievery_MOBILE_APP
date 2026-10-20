@@ -1,14 +1,9 @@
-/* eslint-disable prettier/prettier */
-import { IsEmail, IsString, MinLength } from "class-validator";
-
-
+import { IsEmail, IsString } from 'class-validator';
 
 export class LoginDto {
-   @IsEmail()
-   email!: string;
- 
-   @IsString()
-   @MinLength(6)
-   password!: string;
-    
+  @IsEmail()
+  email!: string;
+
+  @IsString()
+  password!: string;
 }
