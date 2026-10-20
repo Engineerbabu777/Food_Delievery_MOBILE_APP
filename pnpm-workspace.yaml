@@ -1,11 +1,13 @@
 packages:
-  - "apps/*"
-  - "packages/*"
+  - 'apps/*'
+  - 'packages/*'
 allowBuilds:
-  '@parcel/watcher': true
-  bcrypt: false
-  esbuild: false
-  msgpackr-extract: false
+  '@nestjs/core': true
+  bcrypt: true
+  esbuild: true
+  msgpackr-extract: true
   unrs-resolver: true
 patchedDependencies:
   '@expo/cli': patches/@expo__cli.patch
+  expo-constants: patches/expo-constants.patch
+  react-native@0.83.6: patches/react-native@0.83.6.patch

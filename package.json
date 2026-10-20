@@ -1,14 +1,14 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
+  "name": "food-delivery",
   "private": true,
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev:mobile": "pnpm --filter mobile run start",
     "dev:api": "pnpm --filter api run start:dev",
-    "dev": "concurrently \"pnpm dev:mobile\" \"pnpm dev:api\""
+    "dev:mobile": "pnpm --filter mobile run start --ios",
+    "dev": "concurrently \"pnpm dev:api\" \"pnpm dev:mobile\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
@@ -16,17 +16,12 @@
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "^11.18.0",
+      "version": "^11.1.3",
       "onFail": "download"
     }
   },
   "type": "module",
   "devDependencies": {
-    "concurrently": "^10.0.6"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "@expo/cli@55.0.36": "patches/@expo__cli.patch"
-    }
+    "concurrently": "^9.2.1"
   }
 }
