@@ -1,7 +1,7 @@
+import { Module, Global } from '@nestjs/common';
 import { neon } from '@neondatabase/serverless';
-import { Global, Module } from '@nestjs/common';
 import { drizzle } from 'drizzle-orm/neon-http';
-import schema from './schema';
+import * as schema from './schema';
 
 @Global()
 @Module({
@@ -16,4 +16,4 @@ import schema from './schema';
   ],
   exports: ['DB'],
 })
-export class DBModule {}
+export class DbModule {}
