@@ -3,12 +3,15 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { createRouteHandler } from 'uploadthing/express';
 import { uploadRouter } from './uploadthing/upload-router';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    rawBody: true,
+  });
 
   app.enableCors();
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api'); // /api/....
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -18,16 +21,18 @@ async function bootstrap() {
   );
 
   app.use(
-    '/api/upload',
+    '/api/uploadthing',
     createRouteHandler({
       router: uploadRouter,
       config: {
-        token: process.env.UPLOADTHING_SECRET!,
+        token: process.env.UPLOADTHING_TOKEN!,
       },
     }),
   );
 
-  await app.listen(process.env.PORT ?? 3000);
-  console.log(`Application is running on: ${await app.getUrl()}`);
+  const port = process.env.PORT ?? 3000;
+
+  await app.listen(port);
+  console.log(`API running on port ${port}`);
 }
 void bootstrap();
