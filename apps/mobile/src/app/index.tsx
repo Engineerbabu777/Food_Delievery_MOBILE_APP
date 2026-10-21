@@ -1,32 +1,18 @@
+import { Redirect } from 'expo-router';
+import { useAuth } from '@/context/auth-context';
+import { UserRole } from '@food-delivery/types';
 
+export default function Index() {
+  const { user, isLoading } = useAuth();
 
-import { useAuth } from "@/context/auth-context";
-import { UserRole } from "@food-delivery/types";
-import { Redirect } from "expo-router";
-import { ActivityIndicator } from "react-native";
+  if (isLoading) return null;
 
-export default function HomeScreen() {
-    const {user, isLoading} = useAuth();
+  if (!user) return <Redirect href="/login" />;
 
-    if (isLoading) {
-        return <ActivityIndicator />
-    }
+  if (user.role === UserRole.CUSTOMER) return <Redirect href="/(customer)" />;
+  if (user.role === UserRole.RESTAURANT_OWNER)
+    return <Redirect href="/(owner)" />;
+  if (user.role === UserRole.DRIVER) return <Redirect href="/(driver)" />;
 
-    if (!user) {
-        return <Redirect href="/login" />
-    }
-
-    if(user.role === UserRole.CUSTOMER){
-        return <Redirect href={"/(customer)" as any} />
-    }
-
-    if(user.role === UserRole.RESTURANT_OWNER){
-        return <Redirect href={"/(owner)" as any} />
-    }
-
-    if(user.role === UserRole.DRIVER){
-        return <Redirect href={"/(driver)" as any} />
-    }
-
-    return <Redirect href="/login" />
+  return <Redirect href="/login" />;
 }
