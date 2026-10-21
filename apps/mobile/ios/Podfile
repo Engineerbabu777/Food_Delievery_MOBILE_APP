@@ -73,11 +73,8 @@ target 'mobile' do
           end
         end
         target.build_phases.each do |phase|
-          if phase.respond_to?(:shell_script) && phase.shell_script
-            phase.shell_script = phase.shell_script.gsub(
-              'bash -l -c "$PODS_TARGET_SRCROOT/../scripts/get-app-config-ios.sh"',
-              'bash -l -c "\"$PODS_TARGET_SRCROOT/../scripts/get-app-config-ios.sh\""'
-            )
+          if phase.respond_to?(:name) && phase.name.to_s.include?('Generate app.config for prebuilt Constants.manifest')
+            phase.shell_script = 'bash -l -c "\"$PODS_TARGET_SRCROOT/../scripts/get-app-config-ios.sh\""'
           end
         end
       end

@@ -1,4 +1,5 @@
 node_modules/
 dist/
 .env
-.expo/.pnpm-store/
+.expo/
+.pnpm-store/

@@ -28,7 +28,7 @@
         <key>CFBundleURLSchemes</key>
         <array>
           <string>mobile</string>
-          <string>com.noltidtest1.mobile</string>
+          <string>com.foodapp.mobile</string>
         </array>
       </dict>
     </array>
@@ -47,6 +47,12 @@
     </dict>
     <key>NSCameraUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your camera</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Allow $(PRODUCT_NAME) to access your location</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Allow Food Delivery to track your location in the background while delivering.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Allow Food Delivery to use your location for delivery tracking.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your microphone</string>
     <key>NSPhotoLibraryUsageDescription</key>

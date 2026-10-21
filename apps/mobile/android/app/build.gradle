@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.noltidtest1.mobile'
+    namespace 'com.foodapp.mobile'
     defaultConfig {
-        applicationId 'com.noltidtest1.mobile'
+        applicationId 'com.foodapp.mobile'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
