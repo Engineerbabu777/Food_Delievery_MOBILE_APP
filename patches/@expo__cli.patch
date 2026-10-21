@@ -1,28 +1,19 @@
 diff --git a/build/src/start/doctor/apple/SimulatorAppPrerequisite.js b/build/src/start/doctor/apple/SimulatorAppPrerequisite.js
-index 886f915e3e031f7aa97d7da89b0f44056d3040d6..b4718353bf69340e994b15f08e059adcf5060fab 100644
+index 886f915e3e031f7aa97d7da89b0f44056d3040d6..6848daf1e1c7137dd331d2af449323797e1c2227 100644
 --- a/build/src/start/doctor/apple/SimulatorAppPrerequisite.js
 +++ b/build/src/start/doctor/apple/SimulatorAppPrerequisite.js	
-@@ -86,14 +86,15 @@ const debug = require('debug')('expo:doctor:apple:simulatorApp');
-     try {
-         return (await (0, _osascript().execAsync)('id of app "Simulator"')).trim();
-     } catch  {
--    // This error may occur in CI where the user intends to install just the simulators but no
--    // Xcode, or when Simulator.app is not registered in LaunchServices (e.g. Xcode on an
--    // external or renamed volume).
-+    }
+@@ -90,6 +90,10 @@ const debug = require('debug')('expo:doctor:apple:simulatorApp');
+     // Xcode, or when Simulator.app is not registered in LaunchServices (e.g. Xcode on an
+     // external or renamed volume).
+     }
 +    try {
 +        return (await (0, _osascript().execAsync)('id of app "DeviceHub"')).trim();
 +    } catch  {
-     }
++    }
      return null;
  }
  /**
-- * Fallback: locate Simulator.app via the active Xcode developer directory and read its
-+ * Fallback: locate Simulator.app or DeviceHub.app via the active Xcode developer directory and read its
-  * CFBundleIdentifier directly from the app bundle's Info.plist.
-  * This works even when LaunchServices hasn't indexed Simulator.app.
-  */ async function getSimulatorAppIdFromBundleAsync() {
-@@ -102,12 +103,22 @@ const debug = require('debug')('expo:doctor:apple:simulatorApp');
+@@ -102,12 +106,22 @@ const debug = require('debug')('expo:doctor:apple:simulatorApp');
              '--print-path'
          ]);
          const simulatorInfoPlist = _path().default.join(developerDir.trim(), 'Applications', 'Simulator.app', 'Contents', 'Info.plist');
@@ -48,7 +39,7 @@ index 886f915e3e031f7aa97d7da89b0f44056d3040d6..b4718353bf69340e994b15f08e059adc
      } catch  {
      // Simulator.app not found at the expected path or xcode-select is unavailable.
      }
-@@ -124,7 +135,7 @@ class SimulatorAppPrerequisite extends _Prerequisite.Prerequisite {
+@@ -124,7 +138,7 @@ class SimulatorAppPrerequisite extends _Prerequisite.Prerequisite {
              // This error may occur in CI where the users intends to install just the simulators but no Xcode.
              throw new _Prerequisite.PrerequisiteCommandError('SIMULATOR_APP', "Can't determine id of Simulator app; the Simulator is most likely not installed on this machine. Run `sudo xcode-select -s /Applications/Xcode.app`");
          }

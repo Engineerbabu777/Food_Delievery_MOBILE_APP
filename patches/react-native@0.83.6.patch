@@ -1,0 +1,44 @@
+diff --git a/scripts/cocoapods/rncore.rb b/scripts/cocoapods/rncore.rb
+index 597c4b4370d1c3f40fb9420076b30f8bfe105988..468c2cf27fc44fd96493b3e2f787ff22e24223c3 100644
+--- a/scripts/cocoapods/rncore.rb
++++ b/scripts/cocoapods/rncore.rb	
+@@ -143,7 +143,7 @@ class ReactNativeCoreUtils
+         rncore_log("  #{Pathname.new(destinationDebug).relative_path_from(Pathname.pwd).to_s}")
+         rncore_log("  #{Pathname.new(destinationRelease).relative_path_from(Pathname.pwd).to_s}")
+ 
+-        return {:http => URI::File.build(path: destinationDebug).to_s }
++        return {:http => URI::File.build(path: URI::DEFAULT_PARSER.escape(destinationDebug)).to_s }
+     end
+ 
+     def self.podspec_source_download_prebuilt_nightly_tarball()
+@@ -179,7 +179,7 @@ class ReactNativeCoreUtils
+         rncore_log("Resolved nightly ReactNativeCore-prebuilt version:")
+         rncore_log("  #{Pathname.new(destinationDebug).relative_path_from(Pathname.pwd).to_s}")
+         rncore_log("  #{Pathname.new(destinationRelease).relative_path_from(Pathname.pwd).to_s}")
+-        return {:http => URI::File.build(path: destinationDebug).to_s }
++        return {:http => URI::File.build(path: URI::DEFAULT_PARSER.escape(destinationDebug)).to_s }
+     end
+ 
+     def self.process_dsyms(frameworkTarball, dSymsTarball)
+diff --git a/scripts/cocoapods/rndependencies.rb b/scripts/cocoapods/rndependencies.rb
+index a901840340712bf89604f194790404363d710054..d952a6c37ba56911723588d1b0502767ce6fbf96 100644
+--- a/scripts/cocoapods/rndependencies.rb
++++ b/scripts/cocoapods/rndependencies.rb	
+@@ -161,7 +161,7 @@ class ReactNativeDependenciesUtils
+         destinationDebug = download_stable_rndeps(@@react_native_path, @@react_native_version, :debug)
+         download_stable_rndeps(@@react_native_path, @@react_native_version, :release)
+ 
+-        return {:http => URI::File.build(path: destinationDebug).to_s }
++        return {:http => URI::File.build(path: URI::DEFAULT_PARSER.escape(destinationDebug)).to_s }
+     end
+ 
+     def self.release_tarball_url(version, build_type)
+@@ -228,7 +228,7 @@ class ReactNativeDependenciesUtils
+         destinationDebug = download_nightly_rndeps(@@react_native_path, @@react_native_version, :debug)
+         download_nightly_rndeps(@@react_native_path, @@react_native_version, :release)
+ 
+-        return {:http => URI::File.build(path: destinationDebug).to_s }
++        return {:http => URI::File.build(path: URI::DEFAULT_PARSER.escape(destinationDebug)).to_s }
+         return {:http => url}
+     end
+ 
