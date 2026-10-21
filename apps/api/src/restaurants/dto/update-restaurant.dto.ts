@@ -1,6 +1,6 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
-export class UpdateResturantDto {
+export class UpdateRestaurantDto {
   @IsString()
   @IsOptional()
   name?: string;
@@ -15,9 +15,13 @@ export class UpdateResturantDto {
 
   @IsString()
   @IsOptional()
-  imageUrl?: string;
+  cuisineType?: string;
 
   @IsString()
   @IsOptional()
-  cuisineType?: string;
+  imageUrl?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isOpen?: boolean;
 }
