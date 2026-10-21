@@ -1,20 +1,20 @@
 import { IsOptional, IsString } from 'class-validator';
 
-export class CreateResturantDto {
+export class CreateRestaurantDto {
   @IsString()
   name!: string;
 
   @IsString()
   @IsOptional()
-  description!: string;
+  description?: string;
 
   @IsString()
   address!: string;
 
   @IsString()
-  @IsOptional()
-  imageUrl?: string;
+  cuisineType!: string;
 
   @IsString()
-  cuisineType!: string;
+  @IsOptional()
+  imageUrl?: string;
 }
