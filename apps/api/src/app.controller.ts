@@ -1,13 +1,23 @@
 import { Controller, Get, Inject } from '@nestjs/common';
-import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import schema from './db/schema';
+import type { HealthCheckResponse } from '@food-delivery/types';
+import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
+import * as schema from './db/schema';
 
 @Controller()
 export class AppController {
-  constructor(@Inject('DB') private db: NodePgDatabase<typeof schema>) {}
+  constructor(@Inject('DB') private db: NeonHttpDatabase<typeof schema>) {}
 
   @Get('db-test')
   async dbTest() {
-    return this.db.select().from(schema.users).limit(10);
+    const result = await this.db.select().from(schema.users);
+    return { users: result, count: result.length };
+  }
+
+  @Get('health') // /api/health
+  health(): HealthCheckResponse {
+    return {
+      status: 'ok',
+      timestamp: new Date(),
+    };
   }
 }
